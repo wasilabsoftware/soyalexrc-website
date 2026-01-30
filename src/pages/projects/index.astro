@@ -1,0 +1,87 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../components/layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import ProjectCard from '../../components/ui/ProjectCard.astro';
+
+// Fetch all projects content
+const allProjectsData = await getEntry('all-projects', 'index');
+
+const breadcrumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Projects', isActive: true },
+];
+---
+
+<BaseLayout
+  title="Projects | Alex Rodriguez"
+  description="A collection of projects I've built — from production apps to open source tools."
+  footerVariant="minimal"
+  backToTopHref="#top"
+>
+  <div id="top"></div>
+
+  {allProjectsData && (
+    <>
+      <PageHero
+        breadcrumbs={breadcrumbs}
+        label={allProjectsData.data.label}
+        title={allProjectsData.data.title}
+        subtitle={allProjectsData.data.subtitle}
+        filters={allProjectsData.data.filters}
+      />
+
+      <section class="projects-grid">
+        <div class="projects-grid__container">
+          {allProjectsData.data.items.map((project) => (
+            <ProjectCard
+              title={project.title}
+              description={project.description}
+              image={project.image}
+              tags={project.tags}
+              links={project.links}
+              category={project.category}
+              slug={project.slug}
+            />
+          ))}
+        </div>
+      </section>
+    </>
+  )}
+</BaseLayout>
+
+<style>
+  .projects-grid {
+    background-color: var(--color-bg-primary);
+    padding: var(--space-16) var(--space-20);
+  }
+
+  .projects-grid__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  @media (max-width: 1024px) {
+    .projects-grid {
+      padding: var(--space-12) var(--space-6);
+    }
+
+    .projects-grid__container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .projects-grid {
+      padding: var(--space-6) var(--space-5) var(--space-8);
+    }
+
+    .projects-grid__container {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+  }
+</style>

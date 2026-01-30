@@ -1,0 +1,64 @@
+---
+interface Props {
+  variant?: 'default' | 'accent' | 'muted' | 'pill';
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const {
+  variant = 'default',
+  size = 'sm',
+  class: className = '',
+} = Astro.props;
+---
+
+<span class:list={['tag', `tag--${variant}`, `tag--${size}`, className]}>
+  <slot />
+</span>
+
+<style>
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+  }
+
+  /* Sizes */
+  .tag--sm {
+    font-size: 0.6875rem;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  .tag--md {
+    font-size: var(--text-xs);
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+  }
+
+  /* Variants */
+  .tag--default {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+  }
+
+  .tag--accent {
+    background-color: rgba(34, 211, 238, 0.125);
+    color: var(--color-primary);
+  }
+
+  .tag--muted {
+    background-color: var(--color-surface);
+    color: var(--color-text-secondary);
+  }
+
+  .tag--pill {
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    border-radius: var(--radius-full);
+    padding: var(--space-2) var(--space-4);
+    gap: var(--space-2);
+  }
+</style>

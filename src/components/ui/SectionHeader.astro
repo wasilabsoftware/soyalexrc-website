@@ -1,0 +1,84 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  subtitle?: string;
+  align?: 'left' | 'center';
+  class?: string;
+}
+
+const {
+  label,
+  title,
+  subtitle,
+  align = 'center',
+  class: className = '',
+} = Astro.props;
+---
+
+<header class:list={['section-header', `section-header--${align}`, className]}>
+  <span class="section-header__label">{label}</span>
+  <h2 class="section-header__title">{title}</h2>
+  {subtitle && <p class="section-header__subtitle">{subtitle}</p>}
+</header>
+
+<style>
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    width: 100%;
+  }
+
+  .section-header--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .section-header--left {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .section-header__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-primary);
+    letter-spacing: 2px;
+  }
+
+  .section-header__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-h1);
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+    line-height: var(--leading-tight);
+  }
+
+  .section-header__subtitle {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: var(--font-normal);
+    color: var(--color-text-muted);
+    max-width: 600px;
+  }
+
+  @media (max-width: 768px) {
+    .section-header {
+      gap: var(--space-3);
+    }
+
+    .section-header__label {
+      font-size: var(--text-xs);
+    }
+
+    .section-header__title {
+      font-size: 1.75rem; /* 28px per mobile design */
+    }
+
+    .section-header__subtitle {
+      font-size: var(--text-sm);
+    }
+  }
+</style>

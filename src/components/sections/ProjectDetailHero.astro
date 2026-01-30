@@ -1,0 +1,263 @@
+---
+import Breadcrumb from '../ui/Breadcrumb.astro';
+import Tag from '../ui/Tag.astro';
+import Button from '../ui/Button.astro';
+
+interface MetaItem {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  tags: string[];
+  year: string;
+  role: string;
+  duration: string;
+  client?: string;
+  heroImage?: string;
+  liveUrl?: string;
+  githubUrl?: string;
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  tags,
+  year,
+  role,
+  duration,
+  client,
+  heroImage,
+  liveUrl,
+  githubUrl,
+  class: className = '',
+} = Astro.props;
+
+const breadcrumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Projects', href: '/projects' },
+  { label: title, isActive: true },
+];
+
+const metaItems: MetaItem[] = [
+  { label: 'YEAR', value: year },
+  { label: 'MY ROLE', value: role },
+  { label: 'DURATION', value: duration },
+];
+
+if (client) {
+  metaItems.push({ label: 'CLIENT', value: client });
+}
+---
+
+<section class:list={['project-hero', className]}>
+  <div class="project-hero__container">
+    <Breadcrumb items={breadcrumbs} />
+
+    <div class="project-hero__content">
+      <div class="project-hero__left">
+        <div class="project-hero__tags">
+          {tags.map((tag) => (
+            <Tag variant="accent" size="sm">{tag}</Tag>
+          ))}
+        </div>
+
+        <h1 class="project-hero__title">{title}</h1>
+        <p class="project-hero__description">{description}</p>
+
+        {(liveUrl || githubUrl) && (
+          <div class="project-hero__ctas">
+            {liveUrl && (
+              <Button href={liveUrl} variant="primary" size="lg">
+                View Live Project
+                <span class="project-hero__cta-arrow">→</span>
+              </Button>
+            )}
+            {githubUrl && (
+              <Button href={githubUrl} variant="outline" size="lg">
+                View Source Code
+              </Button>
+            )}
+          </div>
+        )}
+
+        <div class="project-hero__meta">
+          {metaItems.map((item) => (
+            <div class="project-hero__meta-item">
+              <span class="project-hero__meta-label">{item.label}</span>
+              <span class="project-hero__meta-value">{item.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {heroImage && (
+        <div class="project-hero__image">
+          <img src={heroImage} alt={title} loading="eager" />
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .project-hero {
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-20) var(--space-20);
+  }
+
+  .project-hero__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .project-hero__content {
+    display: flex;
+    gap: var(--space-20);
+    align-items: flex-start;
+  }
+
+  .project-hero__left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .project-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .project-hero__title {
+    font-family: var(--font-sans);
+    font-size: 56px;
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+    line-height: var(--leading-tight);
+  }
+
+  .project-hero__description {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: var(--font-normal);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  .project-hero__ctas {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
+  }
+
+  .project-hero__cta-arrow {
+    margin-left: var(--space-2);
+  }
+
+  .project-hero__meta {
+    display: flex;
+    gap: var(--space-12);
+    margin-top: var(--space-4);
+  }
+
+  .project-hero__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .project-hero__meta-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: var(--font-semibold);
+    color: var(--color-text-disabled);
+    letter-spacing: 2px;
+  }
+
+  .project-hero__meta-value {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .project-hero__image {
+    width: 500px;
+    height: 350px;
+    flex-shrink: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .project-hero__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 1024px) {
+    .project-hero {
+      padding: var(--space-12) var(--space-6);
+    }
+
+    .project-hero__content {
+      flex-direction: column;
+      gap: var(--space-10);
+    }
+
+    .project-hero__image {
+      width: 100%;
+      height: 300px;
+    }
+
+    .project-hero__meta {
+      flex-wrap: wrap;
+      gap: var(--space-6);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .project-hero {
+      padding: var(--space-8) var(--space-5);
+    }
+
+    .project-hero__container {
+      gap: var(--space-6);
+    }
+
+    .project-hero__left {
+      gap: var(--space-4);
+    }
+
+    .project-hero__title {
+      font-size: 2rem;
+    }
+
+    .project-hero__description {
+      font-size: var(--text-base);
+    }
+
+    .project-hero__ctas {
+      flex-direction: column;
+    }
+
+    .project-hero__meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+
+    .project-hero__image {
+      height: 200px;
+    }
+  }
+</style>

@@ -1,0 +1,105 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../components/layouts/BaseLayout.astro';
+import ProjectDetailHero from '../../components/sections/ProjectDetailHero.astro';
+import ProjectOverview from '../../components/sections/ProjectOverview.astro';
+import ProjectChallenge from '../../components/sections/ProjectChallenge.astro';
+import ProjectProcess from '../../components/sections/ProjectProcess.astro';
+import ProjectTechDecisions from '../../components/sections/ProjectTechDecisions.astro';
+import ProjectResults from '../../components/sections/ProjectResults.astro';
+import ProjectGallery from '../../components/sections/ProjectGallery.astro';
+import ProjectNavigation from '../../components/sections/ProjectNavigation.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('project-detail');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+---
+
+<BaseLayout
+  title={`${data.title} | Alex Rodriguez`}
+  description={data.description}
+>
+  <div id="top"></div>
+
+  <ProjectDetailHero
+    title={data.title}
+    description={data.description}
+    tags={data.tags}
+    year={data.year}
+    role={data.role}
+    duration={data.duration}
+    client={data.client}
+    heroImage={data.heroImage}
+    liveUrl={data.liveUrl}
+    githubUrl={data.githubUrl}
+  />
+
+  {data.overview && (
+    <ProjectOverview
+      label={data.overview.label}
+      title={data.overview.title}
+      paragraphs={data.overview.paragraphs}
+      techStack={data.overview.techStack}
+    />
+  )}
+
+  {data.challenge && (
+    <ProjectChallenge
+      label={data.challenge.label}
+      title={data.challenge.title}
+      subtitle={data.challenge.subtitle}
+      items={data.challenge.items}
+    />
+  )}
+
+  {data.process && (
+    <ProjectProcess
+      label={data.process.label}
+      title={data.process.title}
+      subtitle={data.process.subtitle}
+      steps={data.process.steps}
+    />
+  )}
+
+  {data.techDecisions && (
+    <ProjectTechDecisions
+      label={data.techDecisions.label}
+      title={data.techDecisions.title}
+      subtitle={data.techDecisions.subtitle}
+      items={data.techDecisions.items}
+    />
+  )}
+
+  {data.results && (
+    <ProjectResults
+      label={data.results.label}
+      title={data.results.title}
+      subtitle={data.results.subtitle}
+      stats={data.results.stats}
+      testimonial={data.results.testimonial}
+    />
+  )}
+
+  {data.gallery && (
+    <ProjectGallery
+      label={data.gallery.label}
+      title={data.gallery.title}
+      subtitle={data.gallery.subtitle}
+      images={data.gallery.images}
+    />
+  )}
+
+  {data.navigation && (
+    <ProjectNavigation
+      previous={data.navigation.previous}
+      next={data.navigation.next}
+    />
+  )}
+</BaseLayout>

@@ -1,11 +1,88 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+import BaseLayout from '../components/layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
+import Projects from '../components/sections/Projects.astro';
+import Experience from '../components/sections/Experience.astro';
+import Blog from '../components/sections/Blog.astro';
+import Contact from '../components/sections/Contact.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Fetch all section content
+const heroData = await getEntry('hero', 'home');
+const aboutData = await getEntry('about', 'home');
+const projectsData = await getEntry('projects', 'home');
+const experienceData = await getEntry('experience', 'home');
+const blogData = await getEntry('blog', 'home');
+const contactData = await getEntry('contact', 'home');
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout
+  title="Alex Rodriguez | Full-Stack Developer"
+  description="Full-Stack Developer crafting scalable web applications and mobile experiences with modern technologies."
+>
+  {heroData && (
+    <Hero
+      availabilityTag={heroData.data.availabilityTag}
+      greeting={heroData.data.greeting}
+      name={heroData.data.name}
+      role={heroData.data.role}
+      description={heroData.data.description}
+      ctas={heroData.data.ctas}
+      codeEditor={heroData.data.codeEditor}
+    />
+  )}
+
+  {aboutData && (
+    <About
+      label={aboutData.data.label}
+      title={aboutData.data.title}
+      subtitle={aboutData.data.subtitle}
+      paragraphs={aboutData.data.paragraphs}
+      techStack={aboutData.data.techStack}
+    />
+  )}
+
+  {projectsData && (
+    <Projects
+      label={projectsData.data.label}
+      title={projectsData.data.title}
+      subtitle={projectsData.data.subtitle}
+      viewAllText={projectsData.data.viewAllText}
+      viewAllHref={projectsData.data.viewAllHref}
+      items={projectsData.data.items}
+    />
+  )}
+
+  {experienceData && (
+    <Experience
+      label={experienceData.data.label}
+      title={experienceData.data.title}
+      subtitle={experienceData.data.subtitle}
+      items={experienceData.data.items}
+    />
+  )}
+
+  {blogData && (
+    <Blog
+      label={blogData.data.label}
+      title={blogData.data.title}
+      subtitle={blogData.data.subtitle}
+      viewAllText={blogData.data.viewAllText}
+      viewAllHref={blogData.data.viewAllHref}
+      items={blogData.data.items}
+    />
+  )}
+
+  {contactData && (
+    <Contact
+      label={contactData.data.label}
+      title={contactData.data.title}
+      subtitle={contactData.data.subtitle}
+      email={contactData.data.email}
+      location={contactData.data.location}
+      socialLinks={contactData.data.socialLinks}
+      cta={contactData.data.cta}
+    />
+  )}
+</BaseLayout>

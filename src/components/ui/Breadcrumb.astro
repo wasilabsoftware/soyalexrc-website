@@ -1,0 +1,90 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+  isActive?: boolean;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+  class?: string;
+}
+
+const { items, class: className = '' } = Astro.props;
+---
+
+<nav class:list={['breadcrumb', className]} aria-label="Breadcrumb">
+  <ol class="breadcrumb__list">
+    {items.map((item, index) => (
+      <li class="breadcrumb__item">
+        {item.href && !item.isActive ? (
+          <a href={item.href} class="breadcrumb__link">
+            {item.label}
+          </a>
+        ) : (
+          <span class:list={['breadcrumb__text', { 'breadcrumb__text--active': item.isActive }]}>
+            {item.label}
+          </span>
+        )}
+        {index < items.length - 1 && (
+          <span class="breadcrumb__separator">/</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumb__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    list-style: none;
+  }
+
+  .breadcrumb__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .breadcrumb__link,
+  .breadcrumb__text {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: var(--font-medium);
+  }
+
+  .breadcrumb__link {
+    color: var(--color-text-disabled);
+    text-decoration: none;
+    transition: var(--transition-fast);
+  }
+
+  .breadcrumb__link:hover {
+    color: var(--color-primary);
+  }
+
+  .breadcrumb__text {
+    color: var(--color-text-disabled);
+  }
+
+  .breadcrumb__text--active {
+    color: var(--color-primary);
+  }
+
+  .breadcrumb__separator {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text-disabled);
+  }
+
+  @media (max-width: 768px) {
+    .breadcrumb__link,
+    .breadcrumb__text,
+    .breadcrumb__separator {
+      font-size: 12px;
+      font-weight: var(--font-normal);
+    }
+  }
+</style>

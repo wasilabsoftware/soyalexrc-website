@@ -1,0 +1,82 @@
+---
+interface FilterOption {
+  label: string;
+  value: string;
+  isActive?: boolean;
+}
+
+interface Props {
+  filters: FilterOption[];
+  class?: string;
+}
+
+const { filters, class: className = '' } = Astro.props;
+---
+
+<div class:list={['filter-pills', className]} role="tablist">
+  {filters.map((filter) => (
+    <button
+      class:list={['filter-pills__item', { 'filter-pills__item--active': filter.isActive }]}
+      role="tab"
+      aria-selected={filter.isActive ? 'true' : 'false'}
+      data-filter={filter.value}
+    >
+      {filter.label}
+    </button>
+  ))}
+</div>
+
+<style>
+  .filter-pills {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .filter-pills__item {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: var(--font-medium);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    background-color: var(--color-surface);
+    color: var(--color-text-secondary);
+  }
+
+  .filter-pills__item:hover {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+  }
+
+  .filter-pills__item--active {
+    background-color: var(--color-primary);
+    color: var(--color-bg-primary);
+    font-weight: var(--font-semibold);
+  }
+
+  .filter-pills__item--active:hover {
+    background-color: var(--color-primary);
+    color: var(--color-bg-primary);
+  }
+
+  @media (max-width: 768px) {
+    .filter-pills {
+      gap: var(--space-2);
+    }
+
+    .filter-pills__item {
+      font-size: 12px;
+      font-weight: var(--font-normal);
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+    }
+
+    .filter-pills__item--active {
+      font-weight: var(--font-semibold);
+    }
+  }
+</style>

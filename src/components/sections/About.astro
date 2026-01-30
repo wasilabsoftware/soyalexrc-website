@@ -1,0 +1,180 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import Tag from '../ui/Tag.astro';
+
+interface TechCategory {
+  category: string;
+  technologies: string[];
+}
+
+interface Props {
+  label?: string;
+  title?: string;
+  subtitle?: string;
+  paragraphs?: string[];
+  techStack?: TechCategory[];
+}
+
+const {
+  label = '// ABOUT ME',
+  title = 'My Story & Journey',
+  subtitle = 'From curiosity to code — building digital experiences that matter',
+  paragraphs = [],
+  techStack = [],
+} = Astro.props;
+---
+
+<section class="about" id="about">
+  <div class="about__container">
+    <SectionHeader label={label} title={title} subtitle={subtitle} align="center" />
+
+    <div class="about__content">
+      <div class="about__text">
+        {paragraphs.map((paragraph) => (
+          <p class="about__paragraph">{paragraph}</p>
+        ))}
+      </div>
+
+      {techStack.length > 0 && (
+        <aside class="about__tech">
+          <span class="about__tech-label">// TECH STACK</span>
+          <div class="about__tech-grid">
+            {techStack.map((category) => (
+              <div class="about__tech-row">
+                <span class="about__tech-category">{category.category}</span>
+                <div class="about__tech-tags">
+                  {category.technologies.map((tech) => (
+                    <Tag variant="default" size="md">{tech}</Tag>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-20) var(--space-20);
+  }
+
+  .about__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .about__content {
+    display: flex;
+    gap: var(--space-20);
+  }
+
+  .about__text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .about__paragraph {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .about__tech {
+    width: 480px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .about__tech-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: var(--color-primary);
+    letter-spacing: 2px;
+  }
+
+  .about__tech-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .about__tech-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .about__tech-category {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: var(--font-semibold);
+    color: var(--color-text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .about__tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  @media (max-width: 1024px) {
+    .about {
+      padding: var(--space-16) var(--space-6);
+    }
+
+    .about__content {
+      flex-direction: column;
+      gap: var(--space-12);
+    }
+
+    .about__tech {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .about {
+      padding: var(--space-12) var(--space-5);
+      gap: var(--space-6);
+    }
+
+    .about__container {
+      gap: var(--space-6);
+    }
+
+    .about__content {
+      gap: var(--space-6);
+    }
+
+    .about__paragraph {
+      font-size: var(--text-sm);
+    }
+
+    .about__tech {
+      gap: var(--space-4);
+    }
+
+    .about__tech-label {
+      font-size: 10px;
+    }
+
+    .about__tech-tags {
+      flex-wrap: wrap;
+    }
+  }
+</style>

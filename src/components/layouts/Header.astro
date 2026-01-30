@@ -1,0 +1,198 @@
+---
+import Button from '../ui/Button.astro';
+
+interface NavItem {
+  label: string;
+  href: string;
+  isActive?: boolean;
+}
+
+interface Props {
+  logo?: {
+    icon: string;
+    text: string;
+  };
+  navigation?: NavItem[];
+  cta?: {
+    text: string;
+    href: string;
+  };
+}
+
+const {
+  logo = { icon: '</>', text: 'alex.dev' },
+  navigation = [
+    { label: 'about', href: '/#about' },
+    { label: 'projects', href: '/#projects' },
+    { label: 'experience', href: '/#experience' },
+    { label: 'blog', href: '/#blog' },
+    { label: 'contact', href: '/#contact', isActive: true },
+  ],
+  cta = { text: 'hire me', href: '/#contact' },
+} = Astro.props;
+---
+
+<header class="header">
+  <div class="header__container">
+    <a href="/" class="header__logo">
+      <span class="header__logo-icon">{logo.icon}</span>
+      <span class="header__logo-text">{logo.text}</span>
+    </a>
+
+    <nav class="header__nav">
+      {navigation.map((item) => (
+        <a
+          href={item.href}
+          class:list={['header__nav-link', { 'header__nav-link--active': item.isActive }]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <Button variant="primary" size="sm" data-modal-open="contact">
+      {cta.text}
+    </Button>
+
+    <button class="header__menu-toggle" aria-label="Toggle menu">
+      <span class="header__menu-lines">
+        <span class="header__menu-line"></span>
+        <span class="header__menu-line"></span>
+        <span class="header__menu-line header__menu-line--short"></span>
+      </span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    background-color: var(--color-bg-primary);
+    height: 80px;
+    display: flex;
+    align-items: center;
+  }
+
+  .header__container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 var(--space-20);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+  }
+
+  .header__logo-icon {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: var(--font-bold);
+    color: var(--color-primary);
+  }
+
+  .header__logo-text {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .header__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-10);
+  }
+
+  .header__nav-link {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: var(--transition-fast);
+  }
+
+  .header__nav-link:hover,
+  .header__nav-link--active {
+    color: var(--color-primary);
+  }
+
+  .header__menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-2);
+  }
+
+  .header__menu-lines {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .header__menu-line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--color-text-primary);
+    border-radius: 1px;
+  }
+
+  .header__menu-line--short {
+    width: 16px;
+  }
+
+  @media (max-width: 1024px) {
+    .header__container {
+      padding: 0 var(--space-6);
+    }
+
+    .header__nav {
+      gap: var(--space-6);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      height: 64px;
+    }
+
+    .header__container {
+      padding: 0 var(--space-5);
+    }
+
+    .header__logo {
+      gap: var(--space-2);
+    }
+
+    .header__logo-icon {
+      font-size: var(--text-lg);
+    }
+
+    .header__logo-text {
+      font-size: var(--text-sm);
+    }
+
+    .header__nav,
+    .header :global(.btn) {
+      display: none;
+    }
+
+    .header__menu-toggle {
+      display: block;
+    }
+  }
+</style>

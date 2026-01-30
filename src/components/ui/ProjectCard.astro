@@ -1,0 +1,218 @@
+---
+import Tag from './Tag.astro';
+
+interface ProjectLink {
+  type: 'live' | 'github' | 'appstore' | 'npm' | 'stars';
+  label: string;
+  href?: string;
+  count?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  tags: string[];
+  links: ProjectLink[];
+  category?: string;
+  slug?: string;
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  image,
+  tags,
+  links,
+  category,
+  slug,
+  class: className = '',
+} = Astro.props;
+---
+
+<article class:list={['project-card', className]} data-category={category}>
+  <div class="project-card__image">
+    {image ? (
+      <img src={image} alt={title} loading="lazy" />
+    ) : (
+      <div class="project-card__image-placeholder"></div>
+    )}
+  </div>
+
+  <div class="project-card__content">
+    <div class="project-card__tags">
+      {tags.map((tag) => (
+        <Tag variant="accent" size="sm">{tag}</Tag>
+      ))}
+    </div>
+
+    <h3 class="project-card__title">{title}</h3>
+    <p class="project-card__description">{description}</p>
+
+    <div class="project-card__links">
+      {links.map((link) => (
+        link.type === 'live' || link.type === 'appstore' ? (
+          <a href={link.href} class="project-card__link project-card__link--live">
+            <span class="project-card__live-dot"></span>
+            {link.label}
+          </a>
+        ) : link.type === 'github' ? (
+          <a href={link.href} class="project-card__link project-card__link--github">
+            {link.label}
+          </a>
+        ) : link.type === 'npm' ? (
+          <a href={link.href} class="project-card__link project-card__link--muted">
+            {link.label}
+          </a>
+        ) : link.type === 'stars' ? (
+          <span class="project-card__link project-card__link--muted">
+            {link.label}
+          </span>
+        ) : null
+      ))}
+      {slug && (
+        <a href={`/projects/${slug}`} class="project-card__link project-card__link--details">
+          More details →
+        </a>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: var(--transition-base);
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .project-card__image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .project-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-card__image-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg-secondary);
+  }
+
+  .project-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .project-card__title {
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+    line-height: var(--leading-tight);
+  }
+
+  .project-card__description {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: var(--font-normal);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .project-card__links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-1);
+  }
+
+  .project-card__link {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: var(--font-medium);
+    text-decoration: none;
+    transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .project-card__link--live,
+  .project-card__link--github {
+    color: var(--color-primary);
+  }
+
+  .project-card__link--live:hover,
+  .project-card__link--github:hover {
+    color: var(--color-text-primary);
+  }
+
+  .project-card__link--muted {
+    color: var(--color-text-disabled);
+  }
+
+  .project-card__link--details {
+    color: var(--color-text-secondary);
+    margin-left: auto;
+  }
+
+  .project-card__link--details:hover {
+    color: var(--color-primary);
+  }
+
+  .project-card__live-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-success);
+    border-radius: 50%;
+  }
+
+  @media (max-width: 768px) {
+    .project-card:hover {
+      transform: none;
+    }
+
+    .project-card__image {
+      height: 160px;
+    }
+
+    .project-card__content {
+      padding: var(--space-4);
+      gap: 10px;
+    }
+
+    .project-card__title {
+      font-size: 18px;
+    }
+
+    .project-card__description {
+      font-size: 13px;
+    }
+
+    .project-card__links {
+      display: none;
+    }
+  }
+</style>

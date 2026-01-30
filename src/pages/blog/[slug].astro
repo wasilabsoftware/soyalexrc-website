@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../components/layouts/BaseLayout.astro';
+import ArticleHero from '../../components/sections/ArticleHero.astro';
+import ArticleContent from '../../components/sections/ArticleContent.astro';
+import ArticleShare from '../../components/ui/ArticleShare.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('article-detail');
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { data } = article;
+const { Content } = await article.render();
+---
+
+<BaseLayout
+  title={`${data.title} | Alex Rodriguez`}
+  description={data.description}
+  footerVariant="minimal"
+  backToTopHref="#top"
+>
+  <div id="top"></div>
+
+  <ArticleHero
+    title={data.title}
+    description={data.description}
+    date={data.date}
+    readTime={data.readTime}
+    tags={data.tags}
+    author={data.author}
+  />
+
+  <ArticleContent>
+    <Content />
+
+    {data.shareEnabled && (
+      <ArticleShare title={data.title} />
+    )}
+  </ArticleContent>
+</BaseLayout>

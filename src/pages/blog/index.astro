@@ -1,0 +1,88 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../components/layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import ArticleCard from '../../components/ui/ArticleCard.astro';
+
+// Fetch all articles content
+const allArticlesData = await getEntry('all-articles', 'index');
+
+const breadcrumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', isActive: true },
+];
+---
+
+<BaseLayout
+  title="Blog | Alex Rodriguez"
+  description="Thoughts, tutorials, and insights on web development, mobile apps, and cloud architecture."
+  footerVariant="minimal"
+  backToTopHref="#top"
+>
+  <div id="top"></div>
+
+  {allArticlesData && (
+    <>
+      <PageHero
+        breadcrumbs={breadcrumbs}
+        label={allArticlesData.data.label}
+        title={allArticlesData.data.title}
+        subtitle={allArticlesData.data.subtitle}
+        filters={allArticlesData.data.filters}
+      />
+
+      <section class="articles-grid">
+        <div class="articles-grid__container">
+          {allArticlesData.data.items.map((article) => (
+            <ArticleCard
+              title={article.title}
+              description={article.description}
+              date={article.date}
+              readTime={article.readTime}
+              image={article.image}
+              tags={article.tags}
+              category={article.category}
+              slug={article.slug}
+            />
+          ))}
+        </div>
+      </section>
+    </>
+  )}
+</BaseLayout>
+
+<style>
+  .articles-grid {
+    background-color: var(--color-bg-primary);
+    padding: var(--space-16) var(--space-20);
+  }
+
+  .articles-grid__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  @media (max-width: 1024px) {
+    .articles-grid {
+      padding: var(--space-12) var(--space-6);
+    }
+
+    .articles-grid__container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .articles-grid {
+      padding: var(--space-6) var(--space-5) var(--space-8);
+    }
+
+    .articles-grid__container {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+  }
+</style>

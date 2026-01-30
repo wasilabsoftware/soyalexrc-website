@@ -1,0 +1,220 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import Tag from '../ui/Tag.astro';
+
+interface Job {
+  period: string;
+  jobTitle: string;
+  company: string;
+  description: string;
+  tags: string[];
+  isCurrent?: boolean;
+}
+
+interface Props {
+  label?: string;
+  title?: string;
+  subtitle?: string;
+  items?: Job[];
+}
+
+const {
+  label = '// EXPERIENCE',
+  title = 'Work Timeline',
+  subtitle = 'A journey through my professional career',
+  items = [],
+} = Astro.props;
+---
+
+<section class="experience" id="experience">
+  <div class="experience__container">
+    <SectionHeader label={label} title={title} subtitle={subtitle} align="center" />
+
+    <div class="experience__timeline">
+      {items.map((job, index) => (
+        <article class="experience__job">
+          <div class="experience__date">
+            <span class:list={['experience__period', { 'experience__period--current': job.isCurrent }]}>
+              {job.period}
+            </span>
+          </div>
+
+          <div class="experience__line">
+            <span class:list={['experience__dot', { 'experience__dot--current': job.isCurrent }]}></span>
+            {index < items.length - 1 && <span class="experience__connector"></span>}
+          </div>
+
+          <div class="experience__content">
+            <h3 class="experience__title">{job.jobTitle}</h3>
+            <span class="experience__company">{job.company}</span>
+            <p class="experience__desc">{job.description}</p>
+            <div class="experience__tags">
+              {job.tags.map((tag) => (
+                <Tag variant="default" size="md">{tag}</Tag>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience {
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-20) var(--space-20);
+  }
+
+  .experience__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .experience__timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .experience__job {
+    display: flex;
+    gap: var(--space-10);
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .experience__date {
+    width: 150px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .experience__period {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-muted);
+  }
+
+  .experience__period--current {
+    color: var(--color-primary);
+  }
+
+  .experience__line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 24px;
+    flex-shrink: 0;
+  }
+
+  .experience__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--color-text-muted);
+    background-color: transparent;
+    flex-shrink: 0;
+  }
+
+  .experience__dot--current {
+    width: 16px;
+    height: 16px;
+    border: none;
+    background-color: var(--color-primary);
+  }
+
+  .experience__connector {
+    width: 2px;
+    height: 160px;
+    background-color: var(--color-surface);
+  }
+
+  .experience__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-bottom: var(--space-10);
+  }
+
+  .experience__title {
+    font-family: var(--font-sans);
+    font-size: 1.375rem;
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .experience__company {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-text-muted);
+  }
+
+  .experience__desc {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-top: var(--space-2);
+  }
+
+  .experience__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  @media (max-width: 768px) {
+    .experience {
+      padding: var(--space-12) var(--space-5);
+      gap: var(--space-6);
+    }
+
+    .experience__job {
+      gap: var(--space-4);
+    }
+
+    .experience__date {
+      width: auto;
+      text-align: left;
+    }
+
+    /* Show timeline on mobile like in the design */
+    .experience__line {
+      display: flex;
+      flex-shrink: 0;
+    }
+
+    .experience__connector {
+      height: 80px;
+    }
+
+    .experience__period {
+      font-size: 11px;
+      color: var(--color-primary);
+    }
+
+    .experience__title {
+      font-size: var(--text-base);
+    }
+
+    .experience__company {
+      font-size: 0.8125rem;
+    }
+
+    .experience__desc {
+      font-size: 0.8125rem;
+    }
+
+    .experience__content {
+      padding-bottom: var(--space-6);
+    }
+  }
+</style>

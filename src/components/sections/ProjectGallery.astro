@@ -1,0 +1,142 @@
+---
+interface Props {
+  label?: string;
+  title: string;
+  subtitle?: string;
+  images: string[];
+  class?: string;
+}
+
+const {
+  label = '// PROJECT GALLERY',
+  title,
+  subtitle,
+  images,
+  class: className = '',
+} = Astro.props;
+---
+
+<section class:list={['project-gallery', className]}>
+  <div class="project-gallery__container">
+    <div class="project-gallery__header">
+      <span class="project-gallery__label">{label}</span>
+      <h2 class="project-gallery__title">{title}</h2>
+      {subtitle && <p class="project-gallery__subtitle">{subtitle}</p>}
+    </div>
+
+    <div class="project-gallery__grid">
+      {images.map((image, index) => (
+        <div class="project-gallery__image">
+          <img src={image} alt={`Gallery image ${index + 1}`} loading="lazy" />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .project-gallery {
+    background-color: var(--color-bg-secondary);
+    padding: 100px var(--space-20);
+  }
+
+  .project-gallery__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .project-gallery__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .project-gallery__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-primary);
+    letter-spacing: 2px;
+  }
+
+  .project-gallery__title {
+    font-family: var(--font-sans);
+    font-size: 40px;
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+  }
+
+  .project-gallery__subtitle {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: var(--font-normal);
+    color: var(--color-text-disabled);
+  }
+
+  .project-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  .project-gallery__image {
+    height: 300px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .project-gallery__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-base);
+  }
+
+  .project-gallery__image:hover img {
+    transform: scale(1.02);
+  }
+
+  @media (max-width: 1024px) {
+    .project-gallery {
+      padding: var(--space-16) var(--space-6);
+    }
+
+    .project-gallery__image {
+      height: 250px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .project-gallery {
+      padding: var(--space-12) var(--space-5);
+    }
+
+    .project-gallery__container {
+      gap: var(--space-8);
+    }
+
+    .project-gallery__title {
+      font-size: 1.75rem;
+    }
+
+    .project-gallery__subtitle {
+      font-size: var(--text-base);
+    }
+
+    .project-gallery__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+
+    .project-gallery__image {
+      height: 200px;
+    }
+
+    .project-gallery__image:hover img {
+      transform: none;
+    }
+  }
+</style>

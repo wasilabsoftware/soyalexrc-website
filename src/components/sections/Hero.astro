@@ -1,0 +1,322 @@
+---
+import Button from '../ui/Button.astro';
+import Tag from '../ui/Tag.astro';
+
+interface CodeLine {
+  content: string;
+  color: 'cyan' | 'gray' | 'yellow' | 'green' | 'white';
+}
+
+interface CTA {
+  text: string;
+  href: string;
+  variant: 'primary' | 'secondary' | 'ghost' | 'outline';
+  icon?: string;
+}
+
+interface Props {
+  availabilityTag?: string;
+  greeting?: string;
+  name?: string;
+  role?: string;
+  description?: string;
+  ctas?: CTA[];
+  codeEditor?: {
+    filename: string;
+    lines: CodeLine[];
+  };
+}
+
+const {
+  availabilityTag = 'Available for new projects',
+  greeting = "Hello, I'm",
+  name = 'Alex Rodriguez',
+  role = 'Full-Stack Developer',
+  description = 'I craft scalable web applications and mobile experiences with modern technologies.',
+  ctas = [
+    { text: 'View Projects', href: '#projects', variant: 'primary' },
+    { text: 'Download CV', href: '/cv.pdf', variant: 'secondary' },
+  ],
+  codeEditor,
+} = Astro.props;
+
+const colorMap = {
+  cyan: 'var(--color-primary)',
+  gray: 'var(--color-text-secondary)',
+  yellow: 'var(--color-warning)',
+  green: 'var(--color-success)',
+  white: 'var(--color-text-primary)',
+};
+---
+
+<section class="hero" id="hero">
+  <div class="hero__container">
+    <div class="hero__content">
+      <Tag variant="pill">
+        <span class="hero__availability-dot"></span>
+        {availabilityTag}
+      </Tag>
+
+      <div class="hero__title-group">
+        <span class="hero__greeting">{greeting}</span>
+        <h1 class="hero__name">{name}</h1>
+        <span class="hero__role">{role}</span>
+      </div>
+
+      <p class="hero__description">{description}</p>
+
+      <div class="hero__ctas">
+        {ctas.map((cta) => (
+          <Button variant={cta.variant} href={cta.href}>
+            {cta.icon && <span>{cta.icon}</span>}
+            {cta.text}
+          </Button>
+        ))}
+      </div>
+    </div>
+
+    {codeEditor && (
+      <div class="hero__editor">
+        <div class="hero__editor-header">
+          <div class="hero__editor-dots">
+            <span class="dot dot--red"></span>
+            <span class="dot dot--yellow"></span>
+            <span class="dot dot--green"></span>
+          </div>
+          <span class="hero__editor-filename">{codeEditor.filename}</span>
+        </div>
+        <div class="hero__editor-body">
+          {codeEditor.lines.map((line) => (
+            <code class="hero__code-line" style={`color: ${colorMap[line.color]}`}>
+              {line.content}
+            </code>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .hero {
+    background-color: var(--color-bg-primary);
+    padding: var(--space-20) var(--space-20);
+  }
+
+  .hero__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--space-20);
+  }
+
+  .hero__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .hero__availability-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .hero__title-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .hero__greeting {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: var(--font-medium);
+    color: var(--color-text-muted);
+  }
+
+  .hero__name {
+    font-family: var(--font-sans);
+    font-size: var(--text-display);
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+    line-height: var(--leading-tight);
+  }
+
+  .hero__role {
+    font-family: var(--font-mono);
+    font-size: var(--text-h3);
+    font-weight: var(--font-semibold);
+    color: var(--color-primary);
+  }
+
+  .hero__description {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    max-width: 500px;
+  }
+
+  .hero__ctas {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  /* Code Editor */
+  .hero__editor {
+    width: 520px;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .hero__editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-4);
+    height: 40px;
+    background-color: var(--color-bg-secondary);
+  }
+
+  .hero__editor-dots {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .dot--red { background-color: var(--color-error); }
+  .dot--yellow { background-color: #EAB308; }
+  .dot--green { background-color: var(--color-success); }
+
+  .hero__editor-filename {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    color: var(--color-text-muted);
+  }
+
+  .hero__editor-body {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hero__code-line {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--font-normal);
+    white-space: pre;
+  }
+
+  @media (max-width: 1024px) {
+    .hero {
+      padding: var(--space-12) var(--space-6);
+    }
+
+    .hero__container {
+      flex-direction: column;
+      gap: var(--space-12);
+    }
+
+    .hero__editor {
+      width: 100%;
+      max-width: 520px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: var(--space-10) var(--space-5);
+    }
+
+    .hero__content {
+      align-items: center;
+      text-align: center;
+      gap: var(--space-6);
+    }
+
+    .hero__title-group {
+      align-items: center;
+    }
+
+    .hero__greeting {
+      font-size: var(--text-sm);
+    }
+
+    .hero__name {
+      font-size: 2rem;
+    }
+
+    .hero__role {
+      font-size: var(--text-base);
+    }
+
+    .hero__description {
+      font-size: var(--text-sm);
+      max-width: 100%;
+    }
+
+    .hero__ctas {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .hero__ctas :global(.btn) {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* Show code editor on mobile as separate section */
+    .hero__editor {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-top: var(--space-6);
+    }
+
+    .hero__editor-header {
+      height: 32px;
+      padding: 0 var(--space-3);
+    }
+
+    .hero__editor-dots {
+      gap: 6px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+    }
+
+    .hero__editor-filename {
+      font-size: 10px;
+    }
+
+    .hero__editor-body {
+      padding: var(--space-4);
+      gap: 2px;
+    }
+
+    .hero__code-line {
+      font-size: 11px;
+    }
+  }
+</style>

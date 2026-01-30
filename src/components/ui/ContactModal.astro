@@ -1,0 +1,588 @@
+---
+import Button from './Button.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div id="contact-modal" class:list={['contact-modal', className]} aria-hidden="true" data-state="form">
+  <div class="contact-modal__backdrop" data-modal-close></div>
+
+  <!-- Form State -->
+  <div class="contact-modal__card contact-modal__card--form" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+    <div class="contact-modal__header">
+      <div class="contact-modal__header-content">
+        <span class="contact-modal__label">// GET IN TOUCH</span>
+        <h2 id="contact-modal-title" class="contact-modal__title">Let's Work Together</h2>
+      </div>
+      <button class="contact-modal__close" data-modal-close aria-label="Close modal">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <form class="contact-modal__form" id="contact-form">
+      <div class="contact-modal__field">
+        <label for="contact-name" class="contact-modal__field-label">Name</label>
+        <input
+          type="text"
+          id="contact-name"
+          name="name"
+          class="contact-modal__input"
+          placeholder="John Doe"
+          required
+        />
+      </div>
+
+      <div class="contact-modal__field">
+        <label for="contact-email" class="contact-modal__field-label">Email</label>
+        <input
+          type="email"
+          id="contact-email"
+          name="email"
+          class="contact-modal__input"
+          placeholder="john@example.com"
+          required
+        />
+      </div>
+
+      <div class="contact-modal__field">
+        <label for="contact-subject" class="contact-modal__field-label">Subject</label>
+        <input
+          type="text"
+          id="contact-subject"
+          name="subject"
+          class="contact-modal__input"
+          placeholder="Project Inquiry / Collaboration / Other"
+          required
+        />
+      </div>
+
+      <div class="contact-modal__field">
+        <label for="contact-message" class="contact-modal__field-label">Message</label>
+        <textarea
+          id="contact-message"
+          name="message"
+          class="contact-modal__textarea"
+          placeholder="Tell me about your project..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="contact-modal__footer">
+        <div class="contact-modal__hint">
+          <span class="contact-modal__hint-dot"></span>
+          <span class="contact-modal__hint-text">Usually responds within 24 hours</span>
+        </div>
+        <Button type="submit" variant="primary" size="md">
+          Send Message →
+        </Button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Success State -->
+  <div class="contact-modal__card contact-modal__card--success" role="dialog" aria-modal="true" aria-labelledby="contact-modal-success-title">
+    <div class="contact-modal__status-icon contact-modal__status-icon--success">
+      <span class="contact-modal__status-check">✓</span>
+    </div>
+    <div class="contact-modal__status-content">
+      <h2 id="contact-modal-success-title" class="contact-modal__status-title">Message Sent!</h2>
+      <p class="contact-modal__status-desc">Thanks for reaching out! I'll get back to you within 24 hours.</p>
+    </div>
+    <button class="contact-modal__status-btn" data-modal-close>
+      Close
+    </button>
+  </div>
+
+  <!-- Error State -->
+  <div class="contact-modal__card contact-modal__card--error" role="dialog" aria-modal="true" aria-labelledby="contact-modal-error-title">
+    <div class="contact-modal__status-icon contact-modal__status-icon--error">
+      <span class="contact-modal__status-x">✕</span>
+    </div>
+    <div class="contact-modal__status-content">
+      <h2 id="contact-modal-error-title" class="contact-modal__status-title">Something Went Wrong</h2>
+      <p class="contact-modal__status-desc">There was an error sending your message. Please try again or email me directly.</p>
+    </div>
+    <div class="contact-modal__error-actions">
+      <button class="contact-modal__status-btn" data-retry>
+        Try Again
+      </button>
+      <button class="contact-modal__status-btn contact-modal__status-btn--secondary" data-modal-close>
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .contact-modal {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal, 1000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  .contact-modal[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .contact-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(10, 15, 28, 0.5);
+    cursor: pointer;
+  }
+
+  /* Card States */
+  .contact-modal__card {
+    position: relative;
+    width: 100%;
+    background-color: #0F172A;
+    border: 1px solid #1E293B;
+    border-radius: 16px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.37);
+    transform: translateY(20px);
+    transition: transform 0.2s ease;
+    display: none;
+  }
+
+  .contact-modal[aria-hidden="false"] .contact-modal__card {
+    transform: translateY(0);
+  }
+
+  .contact-modal__card--form {
+    max-width: 520px;
+  }
+
+  .contact-modal__card--success,
+  .contact-modal__card--error {
+    max-width: 440px;
+    padding: 48px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  /* Show correct card based on state */
+  .contact-modal[data-state="form"] .contact-modal__card--form {
+    display: block;
+  }
+
+  .contact-modal[data-state="success"] .contact-modal__card--success {
+    display: flex;
+  }
+
+  .contact-modal[data-state="error"] .contact-modal__card--error {
+    display: flex;
+  }
+
+  /* Form Card Styles */
+  .contact-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 24px 32px;
+    border-bottom: 1px solid #1E293B;
+  }
+
+  .contact-modal__header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .contact-modal__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-primary);
+  }
+
+  .contact-modal__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .contact-modal__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: #1E293B;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+
+  .contact-modal__close:hover {
+    background-color: #334155;
+    color: var(--color-text-primary);
+  }
+
+  .contact-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px;
+  }
+
+  .contact-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .contact-modal__field-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-text-secondary);
+  }
+
+  .contact-modal__input,
+  .contact-modal__textarea {
+    width: 100%;
+    background-color: #1E293B;
+    border: 1px solid #475569;
+    border-radius: var(--radius-md);
+    padding: 0 var(--space-4);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-primary);
+    transition: var(--transition-fast);
+  }
+
+  .contact-modal__input {
+    height: 48px;
+  }
+
+  .contact-modal__textarea {
+    height: 140px;
+    padding: var(--space-3) var(--space-4);
+    resize: none;
+  }
+
+  .contact-modal__input::placeholder,
+  .contact-modal__textarea::placeholder {
+    color: var(--color-text-disabled);
+  }
+
+  .contact-modal__input:focus,
+  .contact-modal__textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  .contact-modal__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #0A0F1C;
+    margin: 0 -32px -32px;
+    padding: 20px 32px;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .contact-modal__hint {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .contact-modal__hint-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-primary);
+  }
+
+  .contact-modal__hint-text {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: var(--font-medium);
+    color: var(--color-text-muted);
+  }
+
+  /* Status Card Styles (Success/Error) */
+  .contact-modal__status-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .contact-modal__status-icon--success {
+    background-color: rgba(34, 197, 94, 0.125);
+  }
+
+  .contact-modal__status-icon--error {
+    background-color: rgba(239, 68, 68, 0.125);
+  }
+
+  .contact-modal__status-check {
+    font-family: var(--font-sans);
+    font-size: 36px;
+    font-weight: 700;
+    color: #22C55E;
+  }
+
+  .contact-modal__status-x {
+    font-family: var(--font-sans);
+    font-size: 36px;
+    font-weight: 700;
+    color: #EF4444;
+  }
+
+  .contact-modal__status-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .contact-modal__status-title {
+    font-family: var(--font-sans);
+    font-size: 28px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0;
+  }
+
+  .contact-modal__status-desc {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 400;
+    color: #94A3B8;
+    line-height: 1.5;
+    max-width: 320px;
+    margin: 0;
+  }
+
+  .contact-modal__status-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: #94A3B8;
+    background-color: #1E293B;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+
+  .contact-modal__status-btn:hover {
+    background-color: #334155;
+    color: #FFFFFF;
+  }
+
+  .contact-modal__status-btn--secondary {
+    background-color: transparent;
+  }
+
+  .contact-modal__error-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .contact-modal {
+      padding: var(--space-4);
+      align-items: flex-end;
+    }
+
+    .contact-modal__card {
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .contact-modal__card--success,
+    .contact-modal__card--error {
+      padding: 32px 24px;
+      gap: 24px;
+    }
+
+    .contact-modal__header {
+      padding: 20px 24px;
+    }
+
+    .contact-modal__title {
+      font-size: var(--text-xl);
+    }
+
+    .contact-modal__form {
+      padding: 24px;
+      gap: 20px;
+    }
+
+    .contact-modal__footer {
+      flex-direction: column;
+      gap: var(--space-4);
+      align-items: stretch;
+      margin: 0 -24px -24px;
+      padding: 20px 24px;
+    }
+
+    .contact-modal__hint {
+      justify-content: center;
+      order: 1;
+    }
+
+    .contact-modal__status-icon {
+      width: 64px;
+      height: 64px;
+    }
+
+    .contact-modal__status-check,
+    .contact-modal__status-x {
+      font-size: 28px;
+    }
+
+    .contact-modal__status-title {
+      font-size: 22px;
+    }
+
+    .contact-modal__status-desc {
+      font-size: 14px;
+    }
+
+    .contact-modal__error-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .contact-modal__status-btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  function initContactModal() {
+    const modal = document.getElementById('contact-modal') as HTMLElement | null;
+    if (!modal) return;
+
+    const openButtons = document.querySelectorAll('[data-modal-open="contact"]');
+    const closeButtons = modal.querySelectorAll('[data-modal-close]');
+    const retryButton = modal.querySelector('[data-retry]');
+    const modalElement = modal;
+
+    function setState(state: 'form' | 'success' | 'error') {
+      modalElement.setAttribute('data-state', state);
+    }
+
+    function openModal() {
+      setState('form');
+      modalElement.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      // Focus first input
+      const firstInput = modalElement.querySelector('input');
+      if (firstInput) {
+        setTimeout(() => firstInput.focus(), 100);
+      }
+    }
+
+    function closeModal() {
+      modalElement.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+
+      // Reset to form state after close animation
+      setTimeout(() => {
+        setState('form');
+        const form = document.getElementById('contact-form') as HTMLFormElement | null;
+        if (form) form.reset();
+      }, 200);
+    }
+
+    // Open modal buttons
+    openButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+      });
+    });
+
+    // Close modal buttons
+    closeButtons.forEach(button => {
+      button.addEventListener('click', closeModal);
+    });
+
+    // Retry button
+    if (retryButton) {
+      retryButton.addEventListener('click', () => {
+        setState('form');
+      });
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalElement.getAttribute('aria-hidden') === 'false') {
+        closeModal();
+      }
+    });
+
+    // Form submission
+    const form = document.getElementById('contact-form');
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form as HTMLFormElement);
+        const data = Object.fromEntries(formData);
+
+        try {
+          // Simulate API call - replace with actual endpoint
+          // For demo purposes, we'll simulate success/error based on a condition
+          console.log('Form submitted:', data);
+
+          // Simulate network delay
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          // Show success state
+          setState('success');
+          (form as HTMLFormElement).reset();
+
+        } catch (error) {
+          console.error('Form submission error:', error);
+          // Show error state
+          setState('error');
+        }
+      });
+    }
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initContactModal);
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initContactModal);
+</script>

@@ -1,0 +1,122 @@
+---
+interface NavItem {
+  title: string;
+  slug: string;
+}
+
+interface Props {
+  previous?: NavItem;
+  next?: NavItem;
+  class?: string;
+}
+
+const {
+  previous,
+  next,
+  class: className = '',
+} = Astro.props;
+---
+
+{(previous || next) && (
+  <nav class:list={['project-navigation', className]}>
+    <div class="project-navigation__container">
+      {previous ? (
+        <a href={`/projects/${previous.slug}`} class="project-navigation__link project-navigation__link--prev">
+          <span class="project-navigation__label">← Previous Project</span>
+          <span class="project-navigation__title">{previous.title}</span>
+        </a>
+      ) : (
+        <div class="project-navigation__placeholder"></div>
+      )}
+
+      {next ? (
+        <a href={`/projects/${next.slug}`} class="project-navigation__link project-navigation__link--next">
+          <span class="project-navigation__label">Next Project →</span>
+          <span class="project-navigation__title">{next.title}</span>
+        </a>
+      ) : (
+        <div class="project-navigation__placeholder"></div>
+      )}
+    </div>
+  </nav>
+)}
+
+<style>
+  .project-navigation {
+    background-color: var(--color-bg-primary);
+    padding: var(--space-16) var(--space-20);
+  }
+
+  .project-navigation__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .project-navigation__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    text-decoration: none;
+    transition: var(--transition-fast);
+  }
+
+  .project-navigation__link:hover .project-navigation__title {
+    color: var(--color-primary);
+  }
+
+  .project-navigation__link--next {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .project-navigation__label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: var(--font-medium);
+    color: var(--color-text-disabled);
+  }
+
+  .project-navigation__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+    transition: var(--transition-fast);
+  }
+
+  .project-navigation__placeholder {
+    flex: 1;
+  }
+
+  @media (max-width: 1024px) {
+    .project-navigation {
+      padding: var(--space-12) var(--space-6);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .project-navigation {
+      padding: var(--space-10) var(--space-5);
+    }
+
+    .project-navigation__container {
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .project-navigation__link--next {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .project-navigation__label {
+      font-size: 11px;
+    }
+
+    .project-navigation__title {
+      font-size: var(--text-base);
+    }
+  }
+</style>

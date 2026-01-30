@@ -1,0 +1,129 @@
+---
+import Breadcrumb from '../ui/Breadcrumb.astro';
+import FilterPills from '../ui/FilterPills.astro';
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+  isActive?: boolean;
+}
+
+interface FilterOption {
+  label: string;
+  value: string;
+  isActive?: boolean;
+}
+
+interface Props {
+  breadcrumbs?: BreadcrumbItem[];
+  label: string;
+  title: string;
+  subtitle?: string;
+  filters?: FilterOption[];
+  class?: string;
+}
+
+const {
+  breadcrumbs,
+  label,
+  title,
+  subtitle,
+  filters,
+  class: className = '',
+} = Astro.props;
+---
+
+<section class:list={['page-hero', className]}>
+  <div class="page-hero__container">
+    {breadcrumbs && breadcrumbs.length > 0 && (
+      <Breadcrumb items={breadcrumbs} />
+    )}
+
+    <div class="page-hero__content">
+      <span class="page-hero__label">{label}</span>
+      <h1 class="page-hero__title">{title}</h1>
+      {subtitle && <p class="page-hero__subtitle">{subtitle}</p>}
+    </div>
+
+    {filters && filters.length > 0 && (
+      <FilterPills filters={filters} />
+    )}
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-20) var(--space-20);
+  }
+
+  .page-hero__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .page-hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .page-hero__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-primary);
+    letter-spacing: 2px;
+  }
+
+  .page-hero__title {
+    font-family: var(--font-sans);
+    font-size: 56px;
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+    line-height: var(--leading-tight);
+  }
+
+  .page-hero__subtitle {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: var(--font-normal);
+    color: var(--color-text-disabled);
+    max-width: 600px;
+  }
+
+  @media (max-width: 1024px) {
+    .page-hero {
+      padding: var(--space-12) var(--space-6);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-hero {
+      padding: var(--space-8) var(--space-5);
+    }
+
+    .page-hero__container {
+      gap: var(--space-4);
+    }
+
+    .page-hero__content {
+      gap: var(--space-3);
+    }
+
+    .page-hero__label {
+      display: none;
+    }
+
+    .page-hero__title {
+      font-size: 1.75rem;
+    }
+
+    .page-hero__subtitle {
+      font-size: var(--text-sm);
+    }
+  }
+</style>

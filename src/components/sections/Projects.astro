@@ -1,0 +1,215 @@
+---
+import SectionHeader from '../ui/SectionHeader.astro';
+import Button from '../ui/Button.astro';
+import Card from '../ui/Card.astro';
+import Tag from '../ui/Tag.astro';
+
+interface Project {
+  title: string;
+  description: string;
+  image?: string;
+  tags: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+  stars?: string;
+}
+
+interface Props {
+  label?: string;
+  title?: string;
+  subtitle?: string;
+  viewAllText?: string;
+  viewAllHref?: string;
+  items?: Project[];
+}
+
+const {
+  label = '// PROJECTS',
+  title = 'Featured Work',
+  subtitle = "A selection of projects I've built — live apps and open source contributions",
+  viewAllText = 'View All Projects',
+  viewAllHref = '/projects',
+  items = [],
+} = Astro.props;
+---
+
+<section class="projects" id="projects">
+  <div class="projects__container">
+    <div class="projects__header">
+      <SectionHeader label={label} title={title} subtitle={subtitle} align="left" />
+      <Button variant="ghost" href={viewAllHref}>
+        {viewAllText}
+        <span>→</span>
+      </Button>
+    </div>
+
+    <div class="projects__grid">
+      {items.map((project) => (
+        <Card variant="project">
+          {project.image && (
+            <div class="projects__card-image" slot="image">
+              <img src={project.image} alt={project.title} loading="lazy" />
+            </div>
+          )}
+          {!project.image && (
+            <div class="projects__card-placeholder" slot="image"></div>
+          )}
+
+          <div class="projects__card-tags">
+            {project.tags.map((tag) => (
+              <Tag variant="accent" size="sm">{tag}</Tag>
+            ))}
+          </div>
+
+          <h3 class="projects__card-title">{project.title}</h3>
+          <p class="projects__card-desc">{project.description}</p>
+
+          <div class="projects__card-links">
+            {project.liveUrl && (
+              <a href={project.liveUrl} class="projects__card-link projects__card-link--live">
+                Live Demo ↗
+              </a>
+            )}
+            {project.githubUrl && (
+              <a href={project.githubUrl} class="projects__card-link">
+                GitHub →
+              </a>
+            )}
+            {project.stars && (
+              <span class="projects__card-stars">⭐ {project.stars}</span>
+            )}
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects {
+    background-color: var(--color-bg-primary);
+    padding: var(--space-20) var(--space-20);
+  }
+
+  .projects__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .projects__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-8);
+  }
+
+  .projects__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  .projects__card-image {
+    height: 220px;
+    overflow: hidden;
+  }
+
+  .projects__card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .projects__card-placeholder {
+    height: 220px;
+    background-color: var(--color-bg-secondary);
+  }
+
+  .projects__card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .projects__card-title {
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .projects__card-desc {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .projects__card-links {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: auto;
+  }
+
+  .projects__card-link {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: var(--font-medium);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: var(--transition-fast);
+  }
+
+  .projects__card-link:hover {
+    color: var(--color-primary);
+  }
+
+  .projects__card-link--live {
+    color: var(--color-primary);
+  }
+
+  .projects__card-stars {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: var(--font-medium);
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 1024px) {
+    .projects {
+      padding: var(--space-16) var(--space-6);
+    }
+
+    .projects__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .projects {
+      padding: var(--space-12) var(--space-5);
+      gap: var(--space-6);
+    }
+
+    .projects__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .projects__card-image,
+    .projects__card-placeholder {
+      height: 160px;
+    }
+
+    .projects__card-title {
+      font-size: var(--text-lg);
+    }
+
+    .projects__card-desc {
+      font-size: 0.8125rem;
+    }
+  }
+</style>
